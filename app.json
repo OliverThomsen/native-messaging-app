@@ -1,27 +1,28 @@
 {
-  "expo": {
-    "name": "native-messaging-app",
-    "description": "This project is really great.",
-    "slug": "native-messaging-app",
-    "privacy": "public",
-    "sdkVersion": "31.0.0",
-    "platforms": ["ios", "android"],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    }
-  }
+	"expo": {
+		"name": "Instant Messaging",
+		"description": "Best instant messaging app that Oliver ever made!",
+		"slug": "instant-messaging",
+		"privacy": "public",
+		"sdkVersion": "31.0.0",
+		"platforms": ["ios", "android"],
+		"version": "1.0.0",
+		"githubUrl": "https://github.com/OliverThomsen/native-messaging-app",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"updates": {
+			"fallbackToCacheTimeout": 0
+		},
+		"assetBundlePatterns": [
+			"**/*"
+		],
+		"ios": {
+			"supportsTablet": true
+		}
+	}
 }
