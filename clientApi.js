@@ -7,9 +7,9 @@ const _headers =  {
 	'Content-Type': 'application/json'
 }
 
+let _io;
 let _username;
 let _userID;
-let _socket;
 let _events = {
 	typing: [],
 	message: [],
@@ -17,18 +17,18 @@ let _events = {
 
 
 function _openSocket() {
-	_socket = SocketIOClient(_root, {
+	_io = SocketIOClient(_root, {
 		query: {
 			userID: _userID,
 		},
 	})
 
-	_socket.on('message', (message) => {
+	_io.on('message', (message) => {
 		const chatID = message.chat.id
 		_emit('message', chatID, message)
 	})
 
-	_socket.on('typing', (data) => {
+	_io.on('typing', (data) => {
 		_emit('typing', data.chatID, data.username);
 	})
 }
@@ -45,11 +45,11 @@ function _emit(event, chatID, data) {
 
 export let socket = {
 	sendMessage(content, chatID) {
-		_socket.emit('message', { content, chatID })
+		_io.emit('message', { content, chatID })
 	},
 
 	sendTyping(chatID) {
-		_socket.emit('typing', { chatID })
+		_io.emit('typing', { chatID })
 	},
 
 	on(event, chatID, callback) {
@@ -77,6 +77,15 @@ export function login(username) {
 			_openSocket();
 			return res.id;
 		});
+}
+
+
+export function logOut() {
+	_io.disconnect();
+	_events.message = [];
+	_events.typing = [];
+	_username = undefined;
+	_userID = undefined;
 }
 
 

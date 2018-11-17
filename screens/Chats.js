@@ -1,6 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, Button, View } from 'react-native'
-import { getChats } from '../clientApi'
+import { getChats, logOut } from '../clientApi'
+import { NavigationActions } from 'react-navigation'
 
 export default class Chats extends React.Component {
 
@@ -10,6 +11,15 @@ export default class Chats extends React.Component {
 			<Button
 				onPress={() => navigation.navigate('CreateChat')}
 				title={'New'}
+			/>
+		),
+		headerLeft: (
+			<Button
+				onPress={() => {
+					logOut();
+					navigation.reset([NavigationActions.navigate({ routeName: 'Login' })], 0)
+				}}
+				title={'Log out'}
 			/>
 		)
 	})
