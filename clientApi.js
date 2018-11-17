@@ -1,8 +1,8 @@
 import SocketIOClient from 'socket.io-client'
 
-const root = 'http://localhost:3000';
-const rootApi = `${root}/api`;
-const headers =  {
+const _root = 'http://localhost:3000';
+const _rootApi = `${_root}/api`;
+const _headers =  {
 	'Accept': 'application/json',
 	'Content-Type': 'application/json'
 }
@@ -10,12 +10,64 @@ const headers =  {
 let _username;
 let _userID;
 let _socket;
+let _events = {
+	typing: [],
+	message: [],
+}
+
+
+function _openSocket() {
+	_socket = SocketIOClient(_root, {
+		query: {
+			userID: _userID,
+		},
+	})
+
+	_socket.on('message', (message) => {
+		const chatID = message.chat.id
+		_emit('message', chatID, message)
+	})
+
+	_socket.on('typing', (data) => {
+		_emit('typing', data.chatID, data.username);
+	})
+}
+
+
+function _emit(event, chatID, data) {
+	_events[event].forEach(obj => {
+		if (obj.chatID === chatID) {
+			obj.callback(data)
+		}
+	});
+}
+
+
+export let socket = {
+	sendMessage(content, chatID) {
+		_socket.emit('message', { content, chatID })
+	},
+
+	sendTyping(chatID) {
+		_socket.emit('typing', { chatID })
+	},
+
+	on(event, chatID, callback) {
+		if (! _events[event]) return;
+		_events[event].push({chatID, callback});
+	},
+
+	unsubscribe(chatID, event) {
+		if (! _events[event]) return;
+		_events[event] = _events[event].filter(obj => obj.chatID !== chatID);
+	},
+}
 
 
 export function login(username) {
-	return fetch(`${rootApi}/login`, {
+	return fetch(`${_rootApi}/login`, {
 		method: 'POST',
-		headers,
+		headers: _headers,
 		body: JSON.stringify({username}),
 	})
 		.then(res => res.json())
@@ -29,9 +81,9 @@ export function login(username) {
 
 
 export function signUp(username) {
-	return fetch(`${rootApi}/users`, {
+	return fetch(`${_rootApi}/users`, {
 		method: 'POST',
-		headers,
+		headers: _headers,
 		body: JSON.stringify({username}),
 	})
 		.then(res => res.json())
@@ -39,69 +91,29 @@ export function signUp(username) {
 			_username = username;
 			_userID = res.id;
 			_openSocket();
-			return res.id;
 		})
 }
 
 
 export async function getChats() {
-	const chats = await fetch(`${rootApi}/users/${_userID}/chats`).then(res => res.json())
-	return chats;
+	return await fetch(`${_rootApi}/users/${_userID}/chats`)
+		.then(res => res.json())
 }
+
 
 export async function getMessages(chatID) {
-	const messages = await fetch(`${rootApi}/chats/${chatID}/messages`).then(res => res.json())
-	return messages;
+	return await fetch(`${_rootApi}/chats/${chatID}/messages`)
+		.then(res => res.json())
 }
 
-function _openSocket() {
-	_socket = SocketIOClient(root, {
-		query: {
+export async function createChat(users) {
+	users.push(_userID)
+	return await fetch(`${_rootApi}/chats`,{
+		method: 'POST',
+		headers: _headers,
+		body: JSON.stringify({
 			userID: _userID,
-		},
-	})
-
-	_socket.on('message', (message) => {
-		const chatID = message.chat.id
-		socket._emit('message', chatID, message)
-	})
-
-	_socket.on('_typing', (data) => {
-		socket._emit('_typing', data.chatID, data.username);
-	})
-}
-
-export let socket = {
-	events: {
-		typing: [],
-		message: [],
-	},
-
-	sendMessage(content, chatID) {
-		_socket.emit('message', { content, chatID })
-	},
-
-	sendTyping(chatID) {
-		_socket.emit('_typing', { chatID })
-	},
-
-	on(event, chatID, callback) {
-		if (! this.events[event]) return;
-		this.events[event].push({chatID, callback});
-	},
-
-	unsubscribe(chatID, event) {
-		if (! this.events[event]) return;
-		this.events[event] = this.events[event].filter(obj => obj.chatID !== chatID);
-	},
-
-	_emit(event, chatID, data) {
-		this.events[event].forEach(obj => {
-			if (obj.chatID === chatID) {
-				obj.callback(data)
-			}
-		});
-	},
-
-
+			users
+		}),
+	}).then(res => res.json())
 }

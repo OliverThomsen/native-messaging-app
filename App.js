@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation';
 import Login from './screens/Login.js';
 import Chats from './screens/Chats.js';
 import Chat from './screens/Chat.js';
+import CreateChat from './screens/CreateChat.js';
 
 
 const RootStack = createStackNavigator(
@@ -10,6 +11,7 @@ const RootStack = createStackNavigator(
 		Login: Login,
 		Chats: Chats,
 		Chat: Chat,
+		CreateChat: CreateChat,
 	},
 	{
 		initialRouteName: 'Login',

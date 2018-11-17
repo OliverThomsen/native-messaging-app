@@ -24,20 +24,13 @@ export default class Login extends React.Component {
 
 	_login() {
 		login(this._username)
-			.then((id) => {
-				console.log(id)
-				this.props.navigation.navigate('Chats')
-
-			})
+			.then(() => this.props.navigation.navigate('Chats'))
 			.catch(error => console.log(error))
 	}
 
 	_signUp() {
 		signUp(this._username)
-			.then(id => {
-				console.log(id)
-				// _open()
-			})
+			.then(() => this.props.navigation.navigate('Chats'))
 			.catch(error => console.log(error))
 	}
 }

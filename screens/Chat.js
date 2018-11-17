@@ -5,6 +5,11 @@ import { getMessages, socket } from '../clientApi'
 
 export default class Chats extends React.Component {
 
+	static navigationOptions = ({navigation}) => ({
+		title: navigation.getParam('chat').name,
+	})
+
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,14 +20,13 @@ export default class Chats extends React.Component {
 	}
 
 	async componentDidMount() {
-		getMessages(this.state. chat.id).then(messages => {
+		getMessages(this.state.chat.id).then(messages => {
 			this.setState({
 				messages,
 				isLoading: false,
 			})
 		});
 		socket.on('message', this.state.chat.id, (message) => {
-			console.log(message)
 			this.setState((state) => {
 				const messages = state.messages;
 				messages.push(message)
@@ -32,7 +36,6 @@ export default class Chats extends React.Component {
 	}
 
 	componentWillUnmount() {
-		console.log('will unmount')
 		socket.unsubscribe(this.state.chat.id, 'message')
 	}
 
@@ -61,7 +64,7 @@ export default class Chats extends React.Component {
 			<View style={styles.container}>
 				<FlatList
 					ref={flatList => this.flatList = flatList}
-					onContentSizeChange={() => this.flatList.scrollToEnd({animated: false})}
+					onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
 					style={styles.messages}
 					data={this.state.messages}
 					keyExtractor={(item) => item.id.toString()}

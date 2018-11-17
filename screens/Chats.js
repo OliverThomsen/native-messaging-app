@@ -1,8 +1,19 @@
 import React from 'react'
-import { ActivityIndicator, FlatList, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, Text, TouchableOpacity, Button, View } from 'react-native'
 import { getChats } from '../clientApi'
 
 export default class Chats extends React.Component {
+
+	static navigationOptions = ({navigation}) => ({
+		title: 'Chats',
+		headerRight: (
+			<Button
+				onPress={() => navigation.navigate('CreateChat')}
+				title={'New'}
+			/>
+		)
+	})
+
 
 	constructor(props) {
 		super(props);
