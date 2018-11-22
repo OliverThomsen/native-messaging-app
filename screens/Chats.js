@@ -22,23 +22,22 @@ export default class Chats extends React.Component {
 				title={'Log out'}
 			/>
 		)
-	})
-
-
+	});
+	
 	constructor(props) {
 		super(props);
 		this.state = {
 			isLoading: true,
 			chats: [],
-		}
-	}
-
-	componentDidMount() {
-		getChats().then(chats => {
-			this.setState({
-				isLoading: false,
-				chats: chats.map(chat => Object.assign(chat, {key: chat.id.toString()})),
-			})
+		};
+		
+		this.props.navigation.addListener('willFocus', () => {
+			getChats().then(chats => {
+				this.setState({
+					isLoading: false,
+					chats: chats.map(chat => Object.assign(chat, {key: chat.id.toString()})),
+				})
+			});
 		});
 	}
 

@@ -115,14 +115,18 @@ export async function getMessages(chatID) {
 		.then(res => res.json())
 }
 
-export async function createChat(users) {
-	users.push(_userID)
+export async function createChat(usernames) {
 	return await fetch(`${_rootApi}/chats`,{
 		method: 'POST',
 		headers: _headers,
 		body: JSON.stringify({
 			userID: _userID,
-			users
+			usernames
 		}),
 	}).then(res => res.json())
+}
+
+export async function searchUsers(username) {
+	return fetch(`${_rootApi}/users?username=${username}`)
+		.then(res => res.json());
 }
