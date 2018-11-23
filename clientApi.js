@@ -5,32 +5,47 @@ const _rootApi = `${_root}/api`;
 const _headers =  {
 	'Accept': 'application/json',
 	'Content-Type': 'application/json'
-}
+};
 
 let _io;
 let _username;
 let _userID;
 let _events = {
 	typing: [],
+	typingEnd: [],
 	message: [],
-}
+};
 
 
 function _openSocket() {
+	let typingCountdowns = {};
+	
 	_io = SocketIOClient(_root, {
 		query: {
 			userID: _userID,
 		},
-	})
+	});
 
 	_io.on('message', (message) => {
-		const chatID = message.chat.id
-		_emit('message', chatID, message)
-	})
+		const chatID = message.chat.id;
+		_emit('message', chatID, message);
+	});
 
 	_io.on('typing', (data) => {
 		_emit('typing', data.chatID, data.username);
-	})
+		
+		if (! typingCountdowns[data.chatID]) {
+			typingCountdowns[data.chatID] = {countingDown: false};
+		}
+		
+		if (! typingCountdowns[data.chatID].countingDown) {
+			typingCountdowns[data.chatID].countingDown = true;
+			setTimeout(() => {
+				_emit('typingEnd', data.chatID);
+				typingCountdowns[data.chatID].countingDown = false;
+			}, 3000);
+		}
+	});
 }
 
 
@@ -61,7 +76,7 @@ export let socket = {
 		if (! _events[event]) return;
 		_events[event] = _events[event].filter(obj => obj.chatID !== chatID);
 	},
-}
+};
 
 
 export function login(username) {

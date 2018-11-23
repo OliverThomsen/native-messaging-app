@@ -7,16 +7,17 @@ export default class Chats extends React.Component {
 
 	static navigationOptions = ({navigation}) => ({
 		title: navigation.getParam('chat').name,
-	})
-
+	});
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			isLoading: true,
 			messages: [],
-			chat: this.props.navigation.getParam('chat')
-		}
+			chat: this.props.navigation.getParam('chat'),
+			typing: null,
+		};
+		this.chatID = this.state.chat.id;
 	}
 
 	async componentDidMount() {
@@ -26,32 +27,39 @@ export default class Chats extends React.Component {
 				isLoading: false,
 			})
 		});
-		socket.on('message', this.state.chat.id, (message) => {
+		
+		socket.on('typing', this.chatID, (username) => this.setState({typing: username}));
+		socket.on('typingEnd', this.chatID, () => this.setState({typing: null}));
+		socket.on('message', this.chatID, (message) => {
 			this.setState((state) => {
 				const messages = state.messages;
-				messages.push(message)
+				messages.push(message);
 				return {messages}
 			})
 		});
 	}
 
 	componentWillUnmount() {
-		socket.unsubscribe(this.state.chat.id, 'message')
+		socket.unsubscribe(this.chatID, 'message');
+		socket.unsubscribe(this.chatID, 'typing');
+		socket.unsubscribe(this.chatID, 'typingEnd');
 	}
 
 	_typing(message) {
 		this.message = message;
-		socket.sendTyping(this.state.chat.id)
+		socket.sendTyping(this.chatID)
 	}
 
 	_sendMessage() {
 		if (! this.message || this.message === '') {
 			return;
 		}
-		socket.sendMessage(this.message, this.state.chat.id)
+		socket.sendMessage(this.message, this.chatID)
 	}
 
 	render() {
+		const typing = this.state.typing ? <Text>{this.state.typing} typing...</Text> : null;
+		
 		if (this.state.isLoading) {
 			return (
 				<View style={{flex: 1, padding: 20, justifyContent: 'center'}}>
@@ -71,6 +79,7 @@ export default class Chats extends React.Component {
 					extraData={this.state}
 					renderItem={({item}) => <Message message={item}/>}
 				/>
+				{typing}
 				<View style={styles.inputContainer}>
 					<TextInput placeholder={'Message'} onChangeText={message => this._typing(message)} style={styles.messageInput}/>
 					<Button title={'send'} onPress={() => this._sendMessage()}/>
@@ -131,4 +140,4 @@ const styles = {
 		borderWidth: 1,
 		borderColor: 'grey',
 	}
-}
+};
