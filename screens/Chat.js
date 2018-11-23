@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Platform, ActivityIndicator, Button, FlatList, KeyboardAvoidingView, Text, TextInput, View, Animated } from 'react-native'
 import { getMessages, socket } from '../clientApi'
 
 
@@ -16,6 +16,7 @@ export default class Chats extends React.Component {
 			messages: [],
 			chat: this.props.navigation.getParam('chat'),
 			typing: null,
+			extraHeight: new Animated.Value(0),
 		};
 		this.chatID = this.state.chat.id;
 	}
@@ -56,7 +57,25 @@ export default class Chats extends React.Component {
 		}
 		socket.sendMessage(this.message, this.chatID)
 	}
-
+	
+	_onKeyboardOpen = () => {
+		if (Platform.OS === 'android') {
+			Animated.timing(this.state.extraHeight, {
+				toValue: 80,
+				duration: 300,
+			}).start();
+		}
+	};
+	
+	_onKeyboardClose = () => {
+		if (Platform.OS === 'android') {
+			Animated.timing(this.state.extraHeight, {
+				toValue:  0,
+				duration: 200,
+			}).start();
+		}
+	};
+	
 	render() {
 		const typing = this.state.typing ? <Text>{this.state.typing} typing...</Text> : null;
 		
@@ -69,7 +88,7 @@ export default class Chats extends React.Component {
 		}
 
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView style={styles.container} behavior='padding'>
 				<FlatList
 					ref={flatList => this.flatList = flatList}
 					onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
@@ -81,10 +100,11 @@ export default class Chats extends React.Component {
 				/>
 				{typing}
 				<View style={styles.inputContainer}>
-					<TextInput placeholder={'Message'} onChangeText={message => this._typing(message)} style={styles.messageInput}/>
-					<Button title={'send'} onPress={() => this._sendMessage()}/>
+					<TextInput placeholder='Message' onChangeText={message => this._typing(message)} style={styles.messageInput} onFocus={this._onKeyboardOpen} onEndEditing={this._onKeyboardClose}/>
+					<Button title='send' onPress={() => this._sendMessage()}/>
 				</View>
-			</View>
+				<Animated.View style={{ height: this.state.extraHeight }} />
+			</KeyboardAvoidingView>
 		)
 	}
 }

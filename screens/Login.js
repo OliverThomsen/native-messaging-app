@@ -1,6 +1,6 @@
 import React from 'react'
 import { login, signUp } from '../clientApi'
-import { StyleSheet, TextInput, View, Button } from 'react-native'
+import { StyleSheet, TextInput, View, Button, KeyboardAvoidingView } from 'react-native'
 
 
 export default class Login extends React.Component {
@@ -12,13 +12,13 @@ export default class Login extends React.Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView style={styles.container} behavior="padding">
 				<TextInput placeholder="Enter username" onChangeText={username => this._username = username}/>
 				<View style={styles.actions}>
 					<Button title="Login" onPress={() => this._login()}/>
 					<Button title="Sign up" onPress={() => this._signUp()}/>
 				</View>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 
