@@ -17,17 +17,25 @@ export default class CreateChat extends React.Component {
 	}
 	
 	async componentDidMount() {
-		const searchList = await searchUsers('');
-		this.setState({searchList});
+		try {
+			const searchList = await searchUsers('');
+			this.setState({searchList});
+		} catch(error) {
+			alert(error);
+		}
 	}
 	
 	async createNewChat() {
-		const usernames = this.getUsernameArray(this.userInput);
-		const chat = await createChat(usernames);
-		this.props.navigation.replace({
-			routeName: 'Chat',
-			params: {chat},
-		})
+		try {
+			const usernames = this.getUsernameArray(this.userInput);
+			const chat = await createChat(usernames);
+			this.props.navigation.replace({
+				routeName: 'Chat',
+				params: {chat},
+			})	
+		} catch(error) {
+			alert(error);
+		}
 	}
 	
 	async onTyping(rawNames) {
@@ -36,10 +44,14 @@ export default class CreateChat extends React.Component {
 	}
 	
 	async getSearchResults(rawNames) {
-		const nameArray = rawNames.split(' ');
-		const LastName = nameArray[nameArray.length-1];
-		const searchList = await searchUsers(LastName);
-		this.setState({searchList});
+		try {
+			const nameArray = rawNames.split(' ');
+			const LastName = nameArray[nameArray.length-1];
+			const searchList = await searchUsers(LastName);
+			this.setState({searchList});	
+		} catch(error) {
+			alert(error);
+		}
 	}
 	
 	addUser(username) {

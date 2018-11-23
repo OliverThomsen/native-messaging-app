@@ -7,21 +7,13 @@ export default class Chats extends React.Component {
 
 	static navigationOptions = ({navigation}) => ({
 		title: 'Chats',
-		headerRight: (
-			<Button
-				onPress={() => navigation.navigate('CreateChat')}
-				title={'New'}
-			/>
-		),
+		headerRight: (<Button title={'New'} onPress={() => navigation.navigate('CreateChat')}/>),
 		headerLeft: (
-			<Button
-				onPress={() => {
-					logOut();
-					navigation.reset([NavigationActions.navigate({ routeName: 'Login' })], 0)
-				}}
-				title={'Log out'}
-			/>
-		)
+			<Button title={'Log out'} onPress={() => {
+				logOut();
+				navigation.reset([NavigationActions.navigate({ routeName: 'Login' })], 0)
+			}}/>
+		),
 	});
 	
 	constructor(props) {
@@ -30,16 +22,20 @@ export default class Chats extends React.Component {
 			isLoading: true,
 			chats: [],
 		};
-		
-		this.props.navigation.addListener('willFocus', () => {
-			getChats().then(chats => {
-				this.setState({
-					isLoading: false,
-					chats: chats.map(chat => Object.assign(chat, {key: chat.id.toString()})),
-				})
-			});
-		});
+		this.props.navigation.addListener('willFocus', this.updateChats);
 	}
+	
+	updateChats = async () => {
+		try {
+			const chats = await getChats();
+			this.setState({
+				isLoading: false,
+				chats: chats.map(chat => Object.assign(chat, {key: chat.id.toString()})),
+			});
+		} catch(error) {
+			alert(error);
+		}
+	};
 
 	render() {
 		if (this.state.isLoading) {

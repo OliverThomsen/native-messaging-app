@@ -25,13 +25,13 @@ export default class Login extends React.Component {
 	_login() {
 		login(this._username)
 			.then(() => this.props.navigation.replace({routeName: 'Chats'}))
-			.catch(error => alert(error.message))
+			.catch(error => alert(error));
 	}
 
 	_signUp() {
 		signUp(this._username)
 			.then(() => this.props.navigation.replace({routeName: 'Chats'}))
-			.catch(error => alert(error))
+			.catch(error => alert(error));
 	}
 }
 

@@ -58,6 +58,22 @@ function _emit(event, chatID, data) {
 }
 
 
+function _fetch(url, obj) {
+	return fetch(url, obj)
+		.then(_handleError)
+		.then(res => res.json());
+}
+
+
+async function _handleError(res) {
+	if (!res.ok) {
+		res = await res.json();
+		throw new Error(res.error)
+	}
+	return res;
+}
+
+
 export let socket = {
 	sendMessage(content, chatID) {
 		_io.emit('message', { content, chatID })
@@ -79,19 +95,18 @@ export let socket = {
 };
 
 
-export function login(username) {
-	return fetch(`${_rootApi}/login`, {
+export async function login(username) {
+	const res = await _fetch(`${_rootApi}/login`, {
 		method: 'POST',
 		headers: _headers,
 		body: JSON.stringify({username}),
-	})
-		.then(res => res.json())
-		.then(res => {
-			_username = username;
-			_userID = res.id;
-			_openSocket();
-			return res.id;
-		});
+	});
+	
+	_username = username;
+	_userID = res.id;
+	_openSocket();
+	
+	return res.id;
 }
 
 
@@ -104,44 +119,39 @@ export function logOut() {
 }
 
 
-export function signUp(username) {
-	return fetch(`${_rootApi}/users`, {
+export async function signUp(username) {
+	const res = await _fetch(`${_rootApi}/users`, {
 		method: 'POST',
 		headers: _headers,
 		body: JSON.stringify({username}),
-	})
-		.then(res => res.json())
-		.then(res => {
-			_username = username;
-			_userID = res.id;
-			_openSocket();
-		})
+	});
+	
+	_username = username;
+	_userID = res.id;
+	_openSocket();
 }
 
 
-export async function getChats() {
-	return await fetch(`${_rootApi}/users/${_userID}/chats`)
-		.then(res => res.json())
+export function getChats() {
+	return _fetch(`${_rootApi}/users/${_userID}/chats`)
 }
 
 
-export async function getMessages(chatID) {
-	return await fetch(`${_rootApi}/chats/${chatID}/messages`)
-		.then(res => res.json())
+export function getMessages(chatID) {
+	return _fetch(`${_rootApi}/chats/${chatID}/messages`)
 }
 
-export async function createChat(usernames) {
-	return await fetch(`${_rootApi}/chats`,{
+export function createChat(usernames) {
+	return _fetch(`${_rootApi}/chats`,{
 		method: 'POST',
 		headers: _headers,
 		body: JSON.stringify({
 			userID: _userID,
-			usernames
+			usernames,
 		}),
-	}).then(res => res.json())
+	})
 }
 
-export async function searchUsers(username) {
-	return fetch(`${_rootApi}/users?username=${username}`)
-		.then(res => res.json());
+export function searchUsers(username) {
+	return _fetch(`${_rootApi}/users?username=${username}`)
 }

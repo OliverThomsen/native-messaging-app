@@ -22,12 +22,15 @@ export default class Chats extends React.Component {
 	}
 
 	async componentDidMount() {
-		getMessages(this.state.chat.id).then(messages => {
+		try {
+			const messages = await getMessages(this.state.chat.id);
 			this.setState({
 				messages,
 				isLoading: false,
-			})
-		});
+			});
+		} catch(error) {
+			alert(error);
+		}
 		
 		socket.on('typing', this.chatID, (username) => this.setState({typing: username}));
 		socket.on('typingEnd', this.chatID, () => this.setState({typing: null}));
