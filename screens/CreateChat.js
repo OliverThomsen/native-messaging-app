@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { createChat, searchUsers } from '../clientApi'
 
 export default class CreateChat extends React.Component {
@@ -78,15 +78,20 @@ export default class CreateChat extends React.Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<Text>To: </Text>
-				<TextInput 
-					ref={textInput => this.textInput = textInput}
-					editable={true}
-					style={styles.input} 
-					onChangeText={names => this.onTyping(names)}/>
-				<Button title={'create'} onPress={() => this.createNewChat()}/>
+			<View style={styles.view}>
+				<View style={styles.inputContainer}>
+					<Text style={styles.to}>To:</Text>
+					<TextInput
+						ref={textInput => this.textInput = textInput}
+						editable={true}
+						style={styles.input}
+						onChangeText={names => this.onTyping(names)}/>
+					<TouchableOpacity onPress={() => this.createNewChat()}>
+						<Text style={styles.createButton}>Create</Text>
+					</TouchableOpacity>
+				</View>
 				<FlatList
+					style={styles.list}
 					data={this.state.searchList}
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={({item}) => <UserItem user={item} onPressItem={(username) => this.addUser(username)}/>}/>
@@ -112,9 +117,9 @@ class UserItem extends React.Component {
 	
 	render() {
 		return (
-			<TouchableOpacity onPress={() => this._onPress()}>
+			<TouchableOpacity style={styles.listItem} onPress={() => this._onPress()}>
 				<View>
-					<Text>{this.state.username}</Text>
+					<Text style={{fontSize: 16}}>{this.state.username}</Text>
 				</View>
 			</TouchableOpacity>
 		);
@@ -123,12 +128,39 @@ class UserItem extends React.Component {
 
 
 const styles = {
-	container: {
+	view: {
+		flex: 1,
+		backgroundColor: 'white',
+	},
+	inputContainer: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: '#f9f9f9',
+		padding: 12,
+	},
+	to: {
+		marginRight: 8,
+		fontSize: 16,
+		color: 'grey',
 	},
 	input: {
 		flex: 1,
-	}
+		fontSize: 16,
+	},
+	list: {
+		paddingLeft: 12,
+		
+	},
+	listItem: {
+		paddingTop: 12,
+		paddingBottom: 12,
+		fontSize: 16,
+		borderBottomWidth: StyleSheet.hairlineWidth,
+		borderBottomColor: 'lightgrey'
+	},
+	createButton: {
+		fontSize: 16,
+		color: '#007aff',
+	},
 };
 
