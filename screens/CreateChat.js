@@ -1,3 +1,4 @@
+import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { createChat, searchUsers } from '../clientApi'
@@ -86,9 +87,7 @@ export default class CreateChat extends React.Component {
 						editable={true}
 						style={styles.input}
 						onChangeText={names => this.onTyping(names)}/>
-					<TouchableOpacity onPress={() => this.createNewChat()}>
-						<Text style={styles.createButton}>Create</Text>
-					</TouchableOpacity>
+					<CustomButton text='Create' type='secondary' onPress={() => this.createNewChat()}/>
 				</View>
 				<FlatList
 					style={styles.list}
@@ -149,7 +148,6 @@ const styles = {
 	},
 	list: {
 		paddingLeft: 12,
-		
 	},
 	listItem: {
 		paddingTop: 12,
@@ -157,10 +155,6 @@ const styles = {
 		fontSize: 16,
 		borderBottomWidth: StyleSheet.hairlineWidth,
 		borderBottomColor: 'lightgrey'
-	},
-	createButton: {
-		fontSize: 16,
-		color: '#007aff',
 	},
 };
 

@@ -1,3 +1,4 @@
+import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, Button, View } from 'react-native'
 import { getChats, logOut } from '../clientApi'
@@ -7,9 +8,9 @@ export default class Chats extends React.Component {
 
 	static navigationOptions = ({navigation}) => ({
 		title: 'Chats',
-		headerRight: (<Button title={'New'} onPress={() => navigation.navigate('CreateChat')}/>),
+		headerRight: (<CustomButton text='New' type='secondary' onPress={() => navigation.navigate('CreateChat')}/>),
 		headerLeft: (
-			<Button title={'Log out'} onPress={() => {
+			<CustomButton text='Log out' type='secondary' onPress={() => {
 				logOut();
 				navigation.reset([NavigationActions.navigate({ routeName: 'Login' })], 0)
 			}}/>
@@ -47,15 +48,15 @@ export default class Chats extends React.Component {
 		}
 
 		return (
-			<View>
+			<View style={styles.container}>
 				<FlatList
 					data={this.state.chats}
 					renderItem={({item}) => {
 						return (
 							<TouchableOpacity onPress={() => this.openChat(item)}>
-								<View>
-									<Text>{item.name ? item.name : item.users[0].user.username}</Text>
-									<Text>{item.lastMessage ? item.lastMessage.content : ''}</Text>
+								<View style={styles.listItem}>
+									<Text style={styles.chatName}>{item.name ? item.name : item.users[0].user.username}</Text>
+									<Text style={styles.message}>{item.lastMessage ? item.lastMessage.content : ''}</Text>
 								</View>
 							</TouchableOpacity>
 						)
@@ -69,3 +70,23 @@ export default class Chats extends React.Component {
 		this.props.navigation.navigate('Chat', {chat})
 	}
 }
+
+const styles = {
+	container: {
+		flex: 1,
+		backgroundColor: 'white',
+	},
+	listItem: {
+		paddingLeft: 8,
+		paddingTop: 4,
+		paddingRight: 8,
+		paddingBottom: 4,
+	},
+	chatName: {
+		fontSize: 16,
+	},
+	message: {
+		fontSize: 14,
+		color: 'grey',	
+	},
+};

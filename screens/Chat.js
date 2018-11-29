@@ -1,5 +1,6 @@
+import CustomButton from '../components/CustomButton';
 import React from 'react'
-import { Platform, ActivityIndicator, Button, FlatList, KeyboardAvoidingView, Text, TextInput, View, Animated } from 'react-native'
+import { Platform, ActivityIndicator, FlatList, KeyboardAvoidingView, Text, TextInput, View, Animated } from 'react-native'
 import { getMessages, socket } from '../clientApi'
 
 
@@ -104,7 +105,7 @@ export default class Chats extends React.Component {
 				{typing}
 				<View style={styles.inputContainer}>
 					<TextInput placeholder='Message' onChangeText={message => this._typing(message)} style={styles.messageInput} onFocus={this._onKeyboardOpen} onEndEditing={this._onKeyboardClose}/>
-					<Button title='send' onPress={() => this._sendMessage()}/>
+					<CustomButton text='send' type='secondary' onPress={() => this._sendMessage()}/>
 				</View>
 				<Animated.View style={{ height: this.state.extraHeight }} />
 			</KeyboardAvoidingView>

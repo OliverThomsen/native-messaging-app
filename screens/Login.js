@@ -1,22 +1,22 @@
+import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { login, signUp } from '../clientApi'
-import { StyleSheet, TextInput, View, Button, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
 
 
 export default class Login extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this._username = '';
 	}
 
 	render() {
 		return (
 			<KeyboardAvoidingView style={styles.container} behavior="padding">
-				<TextInput placeholder="Enter username" onChangeText={username => this._username = username}/>
+				<TextInput style={styles.textInput} placeholder="Enter username" onChangeText={username => this._username = username}/>
 				<View style={styles.actions}>
-					<Button title="Login" onPress={() => this._login()}/>
-					<Button title="Sign up" onPress={() => this._signUp()}/>
+					<CustomButton text='Login' type='primary' style={styles.button} onPress={() => this._login()}/>
+					<CustomButton text='Sign up' type='secondary' style={styles.button} onPress={() => this._signUp()}/>
 				</View>
 			</KeyboardAvoidingView>
 		);
@@ -43,10 +43,17 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	textInput: {
-		height: 40,
+		padding: 8,
+		marginBottom: 12,
+		fontSize: 16,
 	},
 	actions: {
-		flexDirection: 'row',
-		justifyContent: 'center'
-	}
+		alignItems: 'center',
+		minWidth: 150,
+	},
+	button: {
+		marginBottom: 8,
+		alignSelf: 'stretch',
+	},
+	
 });
