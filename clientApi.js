@@ -28,7 +28,7 @@ function _openSocket() {
 
 	_io.on('message', (message) => {
 		const chatID = message.chat.id;
-		_emit('message', chatID, message);
+		_emit('message', chatID, _addDirection(message));
 	});
 
 	_io.on('typing', (data) => {
@@ -71,6 +71,12 @@ async function _handleError(res) {
 		throw new Error(res.error)
 	}
 	return res;
+}
+
+
+function _addDirection(message) {
+	const direction = (message.user.id === _userID) ? 'tx' : 'rx';
+	return Object.assign(message, {direction});
 }
 
 
@@ -137,8 +143,9 @@ export function getChats() {
 }
 
 
-export function getMessages(chatID) {
-	return _fetch(`${_rootApi}/chats/${chatID}/messages`)
+export async function getMessages(chatID) {
+	const messages = await _fetch(`${_rootApi}/chats/${chatID}/messages`);
+	return messages.map(_addDirection);
 }
 
 export function createChat(usernames) {

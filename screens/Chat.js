@@ -99,7 +99,7 @@ export default class Chats extends React.Component {
 					data={this.state.messages}
 					keyExtractor={(item) => item.id.toString()}
 					extraData={this.state}
-					renderItem={({item}) => <Message message={item}/>}
+					renderItem={({item}) => <Message message={item} isGroupMessage={this.state.chat.users.length > 2}/>}
 				/>
 				{typing}
 				<View style={styles.inputContainer}>
@@ -123,9 +123,14 @@ class Message extends React.Component {
 	}
 
 	render() {
+		const direction = this.props.message.direction;
+		
 		return (
-			<View style={styles.messageItem}>
-				<Text>{this.state.content}</Text>
+			<View>
+				{ direction === 'rx' && this.props.isGroupMessage && <Text style={styles.senderName}>{this.props.message.user.username}</Text> }
+				<View style={[styles.messageItem, direction === 'rx' ? styles.messageItemRx : styles.messageItemTx]}>
+					<Text style={direction === 'rx' ? styles.textRx : styles.textTx}>{this.state.content}</Text>
+				</View>
 			</View>
 		);
 	}
@@ -135,6 +140,7 @@ class Message extends React.Component {
 const styles = {
 	container: {
 		flex: 1,
+		backgroundColor: 'white',
 	},
 	messages: {
 		flex: 1,
@@ -149,6 +155,21 @@ const styles = {
 		maxWidth: 250,
 		backgroundColor: 'lightgray',
 	},
+	messageItemTx: {
+		alignSelf: 'flex-end',
+		backgroundColor: 'black',
+	},
+	messageItemRx: {
+		alignSelf: 'flex-start',
+		backgroundColor: '#f1f0f0',
+	},
+	textTx: {
+		fontSize: 16,
+		color: '#f1f0f0',
+	},
+	textRx: {
+		fontSize: 16,
+	},
 	inputContainer: {
 		padding: 12,
 		flex: 0,
@@ -162,5 +183,12 @@ const styles = {
 		borderRadius: 16,
 		borderWidth: 1,
 		borderColor: 'grey',
+		fontSize: 16,
+	},
+	senderName: {
+		marginLeft: 6,
+		marginBottom: 4,
+		fontSize: 12,
+		color: 'grey',
 	}
 };
