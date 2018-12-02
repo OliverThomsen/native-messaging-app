@@ -55,8 +55,8 @@ export default class Chats extends React.Component {
 						return (
 							<TouchableOpacity onPress={() => this.openChat(item)}>
 								<View style={styles.listItem}>
-									<Text style={styles.chatName}>{item.name ? item.name : item.users[0].user.username}</Text>
-									<Text style={styles.message}>{item.lastMessage ? item.lastMessage.content : ''}</Text>
+									<Text style={styles.chatName} numberOfLines={1} ellipseMode='tail'>{item.name ? item.name : item.users[0].user.username}</Text>
+									<Text style={styles.message} numberOfLines={1} ellipseMode='tail' >{item.lastMessage ? item.lastMessage.content : ''}</Text>
 								</View>
 							</TouchableOpacity>
 						)
@@ -77,13 +77,14 @@ const styles = {
 		backgroundColor: 'white',
 	},
 	listItem: {
-		paddingLeft: 8,
-		paddingTop: 4,
-		paddingRight: 8,
-		paddingBottom: 4,
+		paddingLeft: 12,
+		paddingTop: 12,
+		paddingRight: 12,
+		paddingBottom: 12,
 	},
 	chatName: {
 		fontSize: 16,
+		marginBottom: 6,
 	},
 	message: {
 		fontSize: 14,
