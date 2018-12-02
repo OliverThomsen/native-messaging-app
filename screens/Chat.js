@@ -82,7 +82,7 @@ export default class Chats extends React.Component {
 	};
 	
 	render() {
-		const typing = this.state.typing ? <Text>{this.state.typing} typing...</Text> : null;
+		const typing = this.state.typing ? <Text style={styles.typing}>{this.state.typing} is typing...</Text> : null;
 		
 		if (this.state.isLoading) {
 			return (
@@ -199,5 +199,8 @@ const styles = {
 		marginBottom: 4,
 		fontSize: 12,
 		color: 'grey',
-	}
+	},
+	typing: {
+		paddingLeft: 12,
+	},
 };
