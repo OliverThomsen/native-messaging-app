@@ -84,6 +84,7 @@ export default class CreateChat extends React.Component {
 					<Text style={styles.to}>To:</Text>
 					<TextInput
 						ref={textInput => this.textInput = textInput}
+						autoFocus={true}
 						editable={true}
 						style={styles.input}
 						onChangeText={names => this.onTyping(names)}/>
@@ -92,6 +93,7 @@ export default class CreateChat extends React.Component {
 				<FlatList
 					style={styles.list}
 					data={this.state.searchList}
+					keyboardShouldPersistTaps='always'
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={({item}) => <UserItem user={item} onPressItem={(username) => this.addUser(username)}/>}/>
 			</View>
