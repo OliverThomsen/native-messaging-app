@@ -60,6 +60,7 @@ export default class Chats extends React.Component {
 			return;
 		}
 		socket.sendMessage(this.message, this.chatID)
+		this.textInput.clear();
 	}
 	
 	_onKeyboardOpen = () => {
@@ -104,7 +105,13 @@ export default class Chats extends React.Component {
 				/>
 				{typing}
 				<View style={styles.inputContainer}>
-					<TextInput placeholder='Message' onChangeText={message => this._typing(message)} style={styles.messageInput} onFocus={this._onKeyboardOpen} onEndEditing={this._onKeyboardClose}/>
+					<TextInput placeholder='Message'
+					           ref={textInput => this.textInput = textInput}
+					           style={styles.messageInput}
+					           multiline={true}
+					           onChangeText={message => this._typing(message)}
+					           onFocus={this._onKeyboardOpen}
+					           onEndEditing={this._onKeyboardClose}/>
 					<CustomButton text='send' type='secondary' onPress={() => this._sendMessage()}/>
 				</View>
 				<Animated.View style={{ height: this.state.extraHeight }} />
@@ -184,6 +191,7 @@ const styles = {
 		borderRadius: 16,
 		borderWidth: 1,
 		borderColor: 'grey',
+		maxHeight: 150,
 		fontSize: 16,
 	},
 	senderName: {
