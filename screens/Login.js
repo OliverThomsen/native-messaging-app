@@ -1,6 +1,6 @@
 import CustomButton from '../components/CustomButton';
 import React from 'react'
-import { login, signUp } from '../clientApi'
+import { logIn, signUp } from '../clientApi'
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
 
 
@@ -23,7 +23,7 @@ export default class Login extends React.Component {
 	}
 
 	_login() {
-		login(this._username)
+		logIn(this._username)
 			.then(() => this.props.navigation.replace({routeName: 'Chats'}))
 			.catch(error => alert(error));
 	}

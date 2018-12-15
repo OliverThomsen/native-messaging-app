@@ -101,7 +101,7 @@ export let socket = {
 };
 
 
-export async function login(username) {
+export async function logIn(username) {
 	const res = await _fetch(`${_rootApi}/login`, {
 		method: 'POST',
 		headers: _headers,
