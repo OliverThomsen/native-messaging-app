@@ -1,7 +1,7 @@
 import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { FlatList, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
-import { createChat, searchUsers } from '../clientApi'
+import { createChat, searchUsers } from 'instant-messaging'
 
 export default class CreateChat extends React.Component {
 

@@ -1,7 +1,7 @@
 import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, Button, View } from 'react-native'
-import { getChats, logOut } from '../clientApi'
+import { getChats, logOut } from 'instant-messaging'
 import { NavigationActions } from 'react-navigation'
 
 export default class Chats extends React.Component {

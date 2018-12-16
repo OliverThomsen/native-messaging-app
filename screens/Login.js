@@ -1,6 +1,6 @@
 import CustomButton from '../components/CustomButton';
 import React from 'react'
-import { logIn, signUp } from '../clientApi'
+import { logIn, signUp } from 'instant-messaging'
 import { StyleSheet, TextInput, View, KeyboardAvoidingView, TouchableOpacity, Text } from 'react-native'
 
 
