@@ -1,7 +1,7 @@
 import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, Button, View } from 'react-native'
-import { getChats, logOut } from 'instant-messaging'
+import { getChats, logOut, socket } from 'instant-messaging'
 import { NavigationActions } from 'react-navigation'
 
 export default class Chats extends React.Component {
@@ -24,6 +24,15 @@ export default class Chats extends React.Component {
 			chats: [],
 		};
 		this.props.navigation.addListener('willFocus', this.updateChats);
+		this.socket = socket();
+	}
+
+	async componentDidMount() {
+		this.messageEvent = this.socket.on('message', () => this.updateChats());
+	}
+
+	componentWillUnmount() {
+		this.messageEvent.unsubscribe();
 	}
 	
 	updateChats = async () => {
@@ -41,7 +50,7 @@ export default class Chats extends React.Component {
 	render() {
 		if (this.state.isLoading) {
 			return (
-				<View style={{flex: 1, padding: 20}}>
+				<View style={{flex: 1, padding: 20, backgroundColor: 'white',}}>
 					<ActivityIndicator/>
 				</View>
 			)
@@ -77,10 +86,12 @@ const styles = {
 		backgroundColor: 'white',
 	},
 	listItem: {
-		paddingLeft: 12,
+		marginLeft: 24,
 		paddingTop: 12,
 		paddingRight: 12,
 		paddingBottom: 12,
+		borderBottomWidth: 0.5,
+		borderColor: 'lightgrey',
 	},
 	chatName: {
 		fontSize: 16,

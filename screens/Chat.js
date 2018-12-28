@@ -20,6 +20,7 @@ export default class Chats extends React.Component {
 			extraHeight: new Animated.Value(0),
 		};
 		this.chatID = this.state.chat.id;
+		this.socket = socket(this.chatID);
 	}
 
 	async componentDidMount() {
@@ -33,9 +34,9 @@ export default class Chats extends React.Component {
 			alert(error);
 		}
 		
-		socket.on('typing', this.chatID, (username) => this.setState({typing: username}));
-		socket.on('typingEnd', this.chatID, () => this.setState({typing: null}));
-		socket.on('message', this.chatID, (message) => {
+		this.typingEvent = this.socket.on('typing', (username) => this.setState({typing: username}));
+		this.typingEndEvent = this.socket.on('typingEnd', () => this.setState({typing: null}));
+		this.messageEvent = this.socket.on('message', (message) => {
 			this.setState((state) => {
 				const messages = state.messages;
 				messages.push(message);
@@ -45,21 +46,21 @@ export default class Chats extends React.Component {
 	}
 
 	componentWillUnmount() {
-		socket.unsubscribe(this.chatID, 'message');
-		socket.unsubscribe(this.chatID, 'typing');
-		socket.unsubscribe(this.chatID, 'typingEnd');
+		this.typingEvent.unsubscribe();
+		this.typingEndEvent.unsubscribe();
+		this.messageEvent.unsubscribe();
 	}
 
 	_typing(message) {
 		this.message = message;
-		socket.sendTyping(this.chatID)
+		this.socket.sendTyping();
 	}
 
 	_sendMessage() {
 		if (! this.message || this.message === '') {
 			return;
 		}
-		socket.sendMessage(this.message, this.chatID)
+		this.socket.sendMessage(this.message);
 		this.textInput.clear();
 	}
 	
@@ -86,8 +87,8 @@ export default class Chats extends React.Component {
 		
 		if (this.state.isLoading) {
 			return (
-				<View style={{flex: 1, padding: 20, justifyContent: 'center'}}>
-					<ActivityIndicator size="large"/>
+				<View style={{flex: 1, padding: 20, backgroundColor: 'white',}}>
+					<ActivityIndicator/>
 				</View>
 			)
 		}
