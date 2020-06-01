@@ -9,14 +9,19 @@
 		"eject": "expo eject"
 	},
 	"dependencies": {
-		"expo": "^31.0.5",
+		"@react-native-community/masked-view": "0.1.6",
+		"expo": "^37.0.0",
 		"instant-messaging": "github:oliverthomsen/instant-messaging-api-client",
-		"react": "16.5.0",
-		"react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
-		"react-navigation": "^2.18.3",
-		"socket.io": "^2.2.0"
+		"react": "16.9.0",
+		"react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
+		"react-navigation": "^4.3.9",
+		"react-navigation-stack": "^2.5.1",
+		"socket.io": "^2.3.0",
+		"react-native-safe-area-context": "0.7.3",
+		"react-native-gesture-handler": "~1.6.0",
+		"react-native-screens": "~2.2.0"
 	},
 	"devDependencies": {
-		"babel-preset-expo": "^5.0.0"
+		"babel-preset-expo": "^8.1.0"
 	}
 }

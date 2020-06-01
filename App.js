@@ -1,5 +1,6 @@
 import React from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
 import Login from './screens/Login.js';
 import Chats from './screens/Chats.js';
 import Chat from './screens/Chat.js';
@@ -18,10 +19,6 @@ const RootStack = createStackNavigator(
 	}
 );
 
+const App = createAppContainer(RootStack)
 
-export default class App extends React.Component {
-
-	render() {
-		return <RootStack/>
-	}
-}
+export default App;
