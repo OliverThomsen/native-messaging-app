@@ -6,6 +6,11 @@ import Chats from './screens/Chats.js';
 import Chat from './screens/Chat.js';
 import CreateChat from './screens/CreateChat.js';
 
+import { YellowBox } from 'react-native'
+
+YellowBox.ignoreWarnings([
+	'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?'
+])
 
 const RootStack = createStackNavigator(
 	{
