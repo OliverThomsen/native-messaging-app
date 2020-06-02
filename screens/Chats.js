@@ -8,8 +8,8 @@ export default class Chats extends React.Component {
 
 	static navigationOptions = ({navigation}) => ({
 		title: 'Chats',
-		headerRight: (<CustomButton text='New' type='secondary' onPress={() => navigation.navigate('CreateChat')}/>),
-		headerLeft: (
+		headerRight: () => (<CustomButton text='New' type='secondary' onPress={() => navigation.navigate('CreateChat')}/>),
+		headerLeft: () => (
 			<CustomButton text='Log out' type='secondary' onPress={() => {
 				logOut();
 				navigation.reset([NavigationActions.navigate({ routeName: 'Login' })], 0)
