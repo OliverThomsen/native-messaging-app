@@ -2,6 +2,7 @@ import CustomButton from '../components/CustomButton';
 import React from 'react'
 import { Platform, ActivityIndicator, FlatList, KeyboardAvoidingView, Text, TextInput, View, Animated } from 'react-native'
 import { getMessages, socket } from 'instant-messaging'
+import {SafeAreaView} from "react-native"
 
 
 export default class Chats extends React.Component {
@@ -65,21 +66,17 @@ export default class Chats extends React.Component {
 	}
 	
 	_onKeyboardOpen = () => {
-		if (Platform.OS === 'android') {
-			Animated.timing(this.state.extraHeight, {
-				toValue: 80,
-				duration: 300,
-			}).start();
-		}
+		Animated.timing(this.state.extraHeight, {
+			toValue: 80,
+			duration: 150,
+		}).start();
 	};
 	
 	_onKeyboardClose = () => {
-		if (Platform.OS === 'android') {
-			Animated.timing(this.state.extraHeight, {
-				toValue:  0,
-				duration: 200,
-			}).start();
-		}
+		Animated.timing(this.state.extraHeight, {
+			toValue:  0,
+			duration: 150,
+		}).start();
 	};
 	
 	render() {
@@ -94,29 +91,31 @@ export default class Chats extends React.Component {
 		}
 
 		return (
-			<KeyboardAvoidingView style={styles.container} behavior='padding'>
-				<FlatList
-					ref={flatList => this.flatList = flatList}
-					onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
-					style={styles.messages}
-					data={this.state.messages}
-					keyExtractor={(item) => item.id.toString()}
-					extraData={this.state}
-					renderItem={({item}) => <Message message={item} isGroupMessage={this.state.chat.users.length > 2}/>}
-				/>
-				{typing}
-				<View style={styles.inputContainer}>
-					<TextInput placeholder='Message'
-					           ref={textInput => this.textInput = textInput}
-					           style={styles.messageInput}
-					           multiline={true}
-					           onChangeText={message => this._typing(message)}
-					           onFocus={this._onKeyboardOpen}
-					           onEndEditing={this._onKeyboardClose}/>
-					<CustomButton text='send' type='secondary' onPress={() => this._sendMessage()}/>
-				</View>
-				<Animated.View style={{ height: this.state.extraHeight }} />
-			</KeyboardAvoidingView>
+			<SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+				<KeyboardAvoidingView style={styles.container} behavior='padding'>
+					<FlatList
+						ref={flatList => this.flatList = flatList}
+						onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
+						style={styles.messages}
+						data={this.state.messages}
+						keyExtractor={(item) => item.id.toString()}
+						extraData={this.state}
+						renderItem={({item}) => <Message message={item} isGroupMessage={this.state.chat.users.length > 2}/>}
+					/>
+					{typing}
+					<View style={styles.inputContainer}>
+						<TextInput placeholder='Message'
+						           ref={textInput => this.textInput = textInput}
+						           style={styles.messageInput}
+						           multiline={true}
+						           onChangeText={message => this._typing(message)}
+						           onFocus={this._onKeyboardOpen}
+						           onEndEditing={this._onKeyboardClose}/>
+						<CustomButton text='send' type='secondary' onPress={() => this._sendMessage()}/>
+					</View>
+					<Animated.View style={{ height: this.state.extraHeight }} />
+				</KeyboardAvoidingView>
+			</SafeAreaView>
 		)
 	}
 }
